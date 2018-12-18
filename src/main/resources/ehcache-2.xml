@@ -1,0 +1,32 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ehcache.xsd"
+	updateCheck="true" monitoring="autodetect" dynamicConfig="true">
+
+	<diskStore path="java.io.tmpdir" />
+
+	<cacheManagerPeerProviderFactory class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"
+		properties="peerDiscovery=automatic, multicastGroupAddress=230.0.0.1, multicastGroupPort=4446, timeToLive=32" />
+
+	<cacheManagerPeerListenerFactory class="net.sf.ehcache.distribution.RMICacheManagerPeerListenerFactory"
+		properties="port=40002, socketTimeoutMillis=2000" />
+
+	<!-- <transactionManagerLookup class=net.sf.ehcache.transaction.manager.DefaultTransactionManagerLookup properties=jndiName=java:comp/UserTransaction 
+		propertySeparator=; /> -->
+
+	<cache name="Entidade" maxEntriesLocalHeap="0" memoryStoreEvictionPolicy="LRU"
+		timeToLiveSeconds="86400" timeToIdleSeconds="43200" eternal="false" diskPersistent="false"
+		diskExpiryThreadIntervalSeconds="300">
+		<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" />
+		<bootstrapCacheLoaderFactory class="net.sf.ehcache.distribution.RMIBootstrapCacheLoaderFactory"
+			properties="bootstrapAsynchronously=true,
+                                               maximumChunkSizeBytes=5000000" />
+		<searchable>
+			<searchAttribute name="Codigo" expression="value.getCodigo()" />
+		</searchable>
+	</cache>
+
+	<!-- <cache name=abcCache maxElementsInMemory=100 eternal=false overflowToDisk=false diskPersistent=false timeToIdleSeconds=0 
+		timeToLiveSeconds=86400 memoryStoreEvictionPolicy=LRU transactionalMode=xa> <cacheEventListenerFactory class=net.sf.ehcache.distribution.RMICacheReplicatorFactory 
+		properties=replicatePuts=true, replicateUpdates=true, replicateRemovals=true, replicateUpdatesViaCopy=false, replicateAsynchronously=true, 
+		asynchronousReplicationIntervalMillis=500 /> </cache> -->
+
+</ehcache>
